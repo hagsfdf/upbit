@@ -587,23 +587,10 @@ func (u *Upbit) WithdrawKrw(amount string) (*withdraw.Withdraw, *model.Remaining
 //
 // page ; 페이지 번호
 //
-// orderBy : 정렬 방식
-//
 // [HEADERS]
 //
 // Authorization : REQUIRED. Authorization token(JWT)
-func (u *Upbit) GetDeposits(currency, state string, uuids, txids []string, limit, page, orderBy string) ([]*deposit.Deposit, *model.Remaining, error) {
-	switch state {
-	case exchange.DEPOSIT_STATE_SUBMITTING:
-	case exchange.DEPOSIT_STATE_SUBMITTED:
-	case exchange.DEPOSIT_STATE_ALMOST_ACCEPTED:
-	case exchange.DEPOSIT_STATE_REJECTED:
-	case exchange.DEPOSIT_STATE_ACCEPTED:
-	case exchange.DEPOSIT_STATE_PROCESSING:
-	default:
-		return nil, nil, errors.New("invalid state")
-	}
-
+func (u *Upbit) GetDeposits(currency, limit, page) ([]*deposit.Deposit, *model.Remaining, error) {
 	l, e := strconv.Atoi(limit)
 	if e != nil {
 		return nil, nil, e
@@ -612,12 +599,7 @@ func (u *Upbit) GetDeposits(currency, state string, uuids, txids []string, limit
 		return nil, nil, errors.New("invalid limit. 0 < limit <= 100")
 	}
 
-	switch orderBy {
-	case exchange.ORDERBY_ASC:
-	case exchange.ORDERBY_DESC:
-	default:
-		orderBy = exchange.ORDERBY_DESC
-	}
+	orderBy := exchange.ORDERBY_DESC
 
 	values := url.Values{
 		"currency": []string{currency},
