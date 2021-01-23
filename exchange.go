@@ -294,22 +294,17 @@ func (u *Upbit) SellOrder(market, volume, price, orderType, identifier string) (
 // 시장가 매도 SellMarketOrder
 // Disabled Volume parameter
 
-func (u *Upbit) SellMarketOrder(market, price, orderType, identifier string) (*order.Order, *model.Remaining, error) {
+func (u *Upbit) SellMarketOrder(market, volume, identifier string) (*order.Order, *model.Remaining, error) {
 	if len(market) == 0 {
 		return nil, nil, errors.New("market length is 0")
 	}
 
-	if len(price) == 0 {
-		return nil, nil, errors.New("price length is 0")
-	}
-
-
 	values := url.Values{
 		"market":     []string{market},
 		"side":       []string{exchange.ORDER_SIDE_ASK},
-		"volume":     nil,
-		"price":      []string{price},
-		"ord_type":   []string{orderType},
+		"volume":     []string{volume},
+		"price":      nil,
+		"ord_type":   []string{"market"},
 		"identifier": []string{identifier},
 	}
 
