@@ -291,6 +291,48 @@ func (u *Upbit) SellOrder(market, volume, price, orderType, identifier string) (
 	return order, model.RemainingFromHeader(resp.Header), nil
 }
 
+// 시장가 매도 SellMarketOrder
+// Disabled Volume parameter
+
+func (u *Upbit) SellMarketOrder(market, price, orderType, identifier string) (*order.Order, *model.Remaining, error) {
+	if len(market) == 0 {
+		return nil, nil, errors.New("market length is 0")
+	}
+
+	if len(price) == 0 {
+		return nil, nil, errors.New("price length is 0")
+	}
+
+	switch orderType {
+	case exchange.ORDER_TYPE_LIMIT:
+	case exchange.ORDER_TYPE_MARKET:
+	default:
+		return nil, nil, errors.New("invalid orderType")
+	}
+
+	values := url.Values{
+		"market":     []string{market},
+		"side":       []string{exchange.ORDER_SIDE_ASK},
+		"volume":     nil,
+		"price":      []string{price},
+		"ord_type":   []string{orderType},
+		"identifier": []string{identifier},
+	}
+
+	resp, e := u.getResponse(METHOD_POST, URL_UPBIT_V1+"/orders", values, API_TYPE_EXCHANGE, API_GROUP_ORDER)
+	if e != nil {
+		return nil, nil, e
+	}
+	defer resp.Body.Close()
+
+	order := order.OrderFromJSON(resp.Body)
+	if order == nil {
+		return nil, nil, errors.New("order.OrderFromJSON is nil")
+	}
+	return order, model.RemainingFromHeader(resp.Header), nil
+}
+
+
 // CancelOrder 주문 취소 접수
 //
 // [QUERY PARAMS]
