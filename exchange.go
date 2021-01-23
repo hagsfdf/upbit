@@ -303,16 +303,11 @@ func (u *Upbit) SellMarketOrder(market, price, orderType, identifier string) (*o
 		return nil, nil, errors.New("price length is 0")
 	}
 
-	switch orderType {
-	case exchange.ORDER_TYPE_LIMIT:
-	case exchange.ORDER_TYPE_MARKET:
-	default:
-		return nil, nil, errors.New("invalid orderType")
-	}
 
 	values := url.Values{
 		"market":     []string{market},
 		"side":       []string{exchange.ORDER_SIDE_ASK},
+		"volume":     nil,
 		"price":      []string{price},
 		"ord_type":   []string{orderType},
 		"identifier": []string{identifier},
