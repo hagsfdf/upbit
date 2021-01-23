@@ -590,7 +590,7 @@ func (u *Upbit) WithdrawKrw(amount string) (*withdraw.Withdraw, *model.Remaining
 // [HEADERS]
 //
 // Authorization : REQUIRED. Authorization token(JWT)
-func (u *Upbit) GetDeposits(currency, limit, page) ([]*deposit.Deposit, *model.Remaining, error) {
+func (u *Upbit) GetDeposits(currency, limit, page string) ([]*deposit.Deposit, *model.Remaining, error) {
 	l, e := strconv.Atoi(limit)
 	if e != nil {
 		return nil, nil, e
