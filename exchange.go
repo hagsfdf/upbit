@@ -313,7 +313,6 @@ func (u *Upbit) SellMarketOrder(market, price, orderType, identifier string) (*o
 	values := url.Values{
 		"market":     []string{market},
 		"side":       []string{exchange.ORDER_SIDE_ASK},
-		"volume":     nil,
 		"price":      []string{price},
 		"ord_type":   []string{orderType},
 		"identifier": []string{identifier},
